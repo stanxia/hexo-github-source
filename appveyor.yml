@@ -6,10 +6,7 @@ environment:
     secure: Sfao9vYZkafQe42C2yKKHeGn6AhTnHn9BBFrMgbiomXqHeSxbk2feJgPL+PfmMZj
 
 install:
- # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
-  - npm install
   - node --version
   - npm --version
   - npm install
