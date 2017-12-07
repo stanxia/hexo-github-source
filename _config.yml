@@ -124,8 +124,8 @@ deploy:
 douban:
   user: 169673246
   book:
-    title: '森的黄金屋'
-    quote: '活到老 学到老'
+    title: '军火库'
+    quote: '千万不要忘了武装自己'
   movie:
-    title: '森的影院'
-    quote: '从电影中体验不同的人生'
+    title: '幻境'
+    quote: '原来人生还可以这样'
