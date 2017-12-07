@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vps," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记性不好，做个记录，日后有需要时难得费神。
+名词解释了解一些原理，熟悉一些名词，也方便理解接下来安装过程中的操作。
+vpsVPS(Virtual private server) 译作虚拟专用伺服器。你可以把它简单地理解为一台在远端的强劲电脑。当你租用了它以后，可以给它安装操作系统、软件，并通过一些工具连接和远程操控它。
+vultrVultr 是一家 VPS 服务器提供商，有美国、亚洲、欧洲等多地的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手搭建vps和shadowsocks">
+<meta property="og:url" content="https://stanxia.github.io/2017/10/31/手把手搭建vps和shadowsocks/index.html">
+<meta property="og:site_name" content="东篱下">
+<meta property="og:description" content="记性不好，做个记录，日后有需要时难得费神。
+名词解释了解一些原理，熟悉一些名词，也方便理解接下来安装过程中的操作。
+vpsVPS(Virtual private server) 译作虚拟专用伺服器。你可以把它简单地理解为一台在远端的强劲电脑。当你租用了它以后，可以给它安装操作系统、软件，并通过一些工具连接和远程操控它。
+vultrVultr 是一家 VPS 服务器提供商，有美国、亚洲、欧洲等多地的">
+<meta property="og:image" content="https://stanxia.github.io/images/pic/1.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-01.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-02.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-03.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-04.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-06.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-07.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-08.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-09.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-10.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/goumai-11.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-001.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-002.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-003.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-004.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-005.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssh-006.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssr-001.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssr-002.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/ssr-003.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/rs-001-2.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/rs-002.png">
+<meta property="og:image" content="https://www.vultr.net.cn/resources/images/rs-003.png">
+<meta property="og:updated_time" content="2017-11-30T08:18:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手把手搭建vps和shadowsocks">
+<meta name="twitter:description" content="记性不好，做个记录，日后有需要时难得费神。
+名词解释了解一些原理，熟悉一些名词，也方便理解接下来安装过程中的操作。
+vpsVPS(Virtual private server) 译作虚拟专用伺服器。你可以把它简单地理解为一台在远端的强劲电脑。当你租用了它以后，可以给它安装操作系统、软件，并通过一些工具连接和远程操控它。
+vultrVultr 是一家 VPS 服务器提供商，有美国、亚洲、欧洲等多地的">
+<meta name="twitter:image" content="https://stanxia.github.io/images/pic/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://stanxia.github.io/2017/10/31/手把手搭建vps和shadowsocks/"/>
+
+
+
+
+
+  <title>手把手搭建vps和shadowsocks | 东篱下</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">东篱下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">斯坦@森</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/aboutme/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-spark">
+          <a href="/tags/spark/" rel="section">
+            
+            SPARK
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-hive">
+          <a href="/tags/hive/" rel="section">
+            
+            HIVE
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-gem">
+          <a href="/gem/" rel="section">
+            
+            GEM
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+            BOOKS
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies" rel="section">
+            
+            MOVIES
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photos">
+          <a href="https://www.instagram.com/xooglexls/" rel="section">
+            
+            PHOTOS
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+    
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://stanxia.github.io/2017/10/31/手把手搭建vps和shadowsocks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="森">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+    
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="东篱下">
+    </span>
+    
+    
+      <header class="post-header">
+    
+        
+        
+          <h1 class="post-title" itemprop="name headline">手把手搭建vps和shadowsocks</h1>
+        
+    
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-31T00:16:22+08:00">
+                2017-10-31
+              </time>
+            
+    
+            
+    
+            
+          </span>
+    
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vps/" itemprop="url" rel="index">
+                    <span itemprop="name">vps</span>
+                  </a>
+                </span>
+    
+                
+                
+              
+            </span>
+          
+    
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/31/手把手搭建vps和shadowsocks/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/10/31/手把手搭建vps和shadowsocks/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+    
+          
+          
+             <span id="/2017/10/31/手把手搭建vps和shadowsocks/" class="leancloud_visitors" data-flag-title="手把手搭建vps和shadowsocks">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+    
+          
+    
+          
+    
+          
+    
+        </div>
+      </header>
+    
+    
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+    
+      
+      
+    
+      
+        <script src="/assets/js/DPlayer.min.js"> </script><div class="note info"><p>记性不好，做个记录，日后有需要时难得费神。</p></div>
+<h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><p>了解一些原理，熟悉一些名词，也方便理解接下来安装过程中的操作。</p>
+<h3 id="vps"><a href="#vps" class="headerlink" title="vps"></a>vps</h3><p>VPS(Virtual private server) 译作虚拟专用伺服器。你可以把它简单地理解为一台在远端的强劲电脑。当你租用了它以后，可以给它安装操作系统、软件，并通过一些工具连接和远程操控它。</p>
+<h3 id="vultr"><a href="#vultr" class="headerlink" title="vultr"></a>vultr</h3><p><a href="https://www.vultr.com/" target="_blank" rel="external">Vultr</a> 是一家 VPS 服务器提供商，有美国、亚洲、欧洲等多地的 VPS。它家的服务器以性价比高闻名，按时间计费，最低的资费为每月 $2.5。</p>
+<h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><p>Linux 是免费开源的操作系统，大概被世界上过半服务器所采用。有大量优秀的开源软件可以安装，上述 Shadowsocks 就是其一。你可以通过命令行来直接给 Linux 操作系统「下命令」，比如 $ cd ~/Desktop 就是进入你根目录下的 Desktop 文件夹。</p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p> SSH 是一种网络协议，作为每一台 Linux 电脑的标准配置，用于计算机之间的加密登录。当你为租用的 VPS 安装 Linux 系统后，只要借助一些工具，就可以用 SSH 在你自己的 Mac/PC 电脑上远程登录该 VPS 了。</p>
+<h3 id="shadowsocks"><a href="#shadowsocks" class="headerlink" title="shadowsocks"></a>shadowsocks</h3><p>Shadowsocks(ss) 是由 <a href="https://github.com/Clowwindy" target="_blank" rel="external">Clowwindy</a> 开发的一款软件，其作用本来是加密传输资料。当然，也正因为它加密传输资料的特性，使得 GFW 没法将由它传输的资料和其他普通资料区分开来，也就不能干扰我们访问那些「不存在」的网站了。<br><a id="more"></a><br><img src="/images/pic/1.png" alt="121"></p>
+<h2 id="搭建vps"><a href="#搭建vps" class="headerlink" title="搭建vps"></a>搭建vps</h2><p>目的就是搭建梯子。无建站的需求。推荐vultr，最便宜的有2.5美元一个月。500g流量完全够用了。且现在支持支付宝付款，颇为方便。现阶段的优惠活动是新注册的用户完成指定的任务会获得3美元的奖励。（详细情况可依参见官网。）</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>首先点击右侧注册链接：<a href="https://www.vultr.com/?ref=7008162" target="_blank" rel="external">https://www.vultr.com/2017Promo</a>，然后会来到下图所示的注册页面。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-01.png" alt="11"></p>
+<p>第一个框中填写注册邮箱，第二个框中填写注册密码（至少包含1个小写字母、1个大写字母和1个数字），最后点击Create Account创建账户。</p>
+<p>创建账户后注册邮箱会收到一封验证邮件，我们需要点击Verify Your E-mail来验证邮箱。</p>
+<p>如果注册邮箱收不到验证邮件请更换注册邮箱后重复第一步。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-02.png" alt="12"></p>
+<p>验证邮箱后我们会来到下图所示的登录界面，按下图中指示填写信息，然后点击Login登录。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-03.png" alt="13"></p>
+<p>登陆后我们会来到充值界面。Vultr要求新账户充值后才可以正常创建服务器。Vultr已经支持支付宝了，在这里推荐大家使用支付宝充值，最低金额为10美元。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-04.png" alt="14"></p>
+<h3 id="购买"><a href="#购买" class="headerlink" title="购买"></a>购买</h3><p>充值完毕后点击右上角的蓝色加号按钮进入创建服务器界面。</p>
+<p>首先需要选择Server Location即机房位置，从左到右、从上到下依次为东京、新加坡、伦敦、法兰克福、巴黎、阿姆斯特丹、迈阿密、亚特兰大、芝加哥、硅谷、达拉斯、洛杉矶、纽约、西雅图、悉尼。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-06.png" alt="16"></p>
+<p>然后需要选择Server Type即服务类型，这里大家需要选择安装Debian 7 x64系统，因为这个系统折腾起来比较容易，搭建东西也简单便捷。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-07.png" alt="17"></p>
+<p>然后需要选择Server Size即方案类型，这里大家可以按照需要自行选择，如果只是普通使用那么选择第二个5美元方案即可。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-08.png" alt="111"></p>
+<p>然后Additional Features、Startup Script、SSH Keys以及Server Hostname &amp; Label等四部分大家保持默认即可，最后点击右下方的蓝色Deploy Now按钮确认创建服务器。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-09.png" alt="222"></p>
+<p>创建服务器后我们会看到下图所示界面。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-10.png" alt="22"></p>
+<p>上图中我们需要耐心等待3~4分钟，等红色Installing字变为绿色Running字后，点击Cloud Instance即可进入服务器详细信息界面，如下图所示。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/goumai-11.png" alt="33"></p>
+<p>左侧红框内四行信息依次为机房位置、IP地址、登录用户名、登录密码。IP地址后面的按钮为复制IP地址，登录密码后面的按钮为复制密码及显示/隐藏密码。右上角红框内后面四个按钮分别是关闭服务器、重启服务器、重装系统、删除服务器。</p>
+<h2 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h2><p>安装远程登录软件。这里以windos端的xshell为例。使用mac的同学可以下载iTerm。</p>
+<p>下载安装后打开软件。根据下图中的指示，我们点击会话框中的新建按钮。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-001.png" alt="111"></p>
+<p>点击新建按钮后会弹出下图所示界面。根据图中指示，我们首先填写IP地址，然后点击确定按钮。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-002.png" alt="333"></p>
+<p>点击确定按钮后我们会回到下图所示界面。根据图中指示，我们双击打开新建会话或者点击下方连接按钮打开新建会话。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-003.png" alt="444"></p>
+<p>开新建会话后会弹出下图所示界面。根据图中指示，我们点击接受并保存按钮。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-004.png" alt="555"></p>
+<p>点击接受并保存按钮会弹出下图所示界面。根据图中指示，我们首先填写SSH连接密码，然后打钩记住密码，最后点击确定按钮。</p>
+<p>如果提示需要输入用户名（登录名），那么请输入root！</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-005.png" alt="56"></p>
+<p>点击确定按钮后服务器会自动连接，连接完毕后我们会来到下图所示界面</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssh-006.png" alt="7"></p>
+<h2 id="部署shadowsocks"><a href="#部署shadowsocks" class="headerlink" title="部署shadowsocks"></a>部署shadowsocks</h2><p>这里采用网上整理的一键部署的方案。简单方便操作。 </p>
+<p>首先复制以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -N --no-check-certificate https://0123.cool/download/55r.sh &amp;&amp; chmod +x 55r.sh &amp;&amp; ./55r.sh</div></pre></td></tr></table></figure>
+<p>然后回到Xshell软件，右击选择粘贴，粘贴完毕后回车继续。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssr-001.png" alt="i"></p>
+<p>回车后系统会自行下载脚本文件并运行。根据下图图中指示，我们依次输入SSR的各项连接信息，最后回车继续。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssr-002.png" alt="2"></p>
+<p>安装完成后会出现下图所示界面。根据图中指示，我们将红框圈中的信息保存到记事本内。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/ssr-003.png" alt="3"></p>
+<h2 id="配置锐意加速"><a href="#配置锐意加速" class="headerlink" title="配置锐意加速"></a>配置锐意加速</h2><p>根据下图图中指示，我们继续复制下列信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -N --no-check-certificate https://0123.cool/download/rs.sh &amp;&amp; bash rs.sh install</div></pre></td></tr></table></figure>
+<p>然后回到Xshell软件，右击选择粘贴，粘贴完毕后回车继续。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/rs-001-2.png" alt="4"></p>
+<p>回车后系统会自行下载脚本文件并运行。根据下图图中指示，我们依次输入锐速的各项配置信息，最后回车继续。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/rs-002.png" alt="5"></p>
+<p>回车后，系统自动执行命令完成破解版锐速安装，如下图所示。</p>
+<p><img src="https://www.vultr.net.cn/resources/images/rs-003.png" alt="6"></p>
+<p>我们首先输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reboot</div></pre></td></tr></table></figure>
+<p>然后回车，Xshell会断开连接，系统会在1分钟后重启完毕，此时可以关闭Xshell软件了。</p>
+<p>搭建教程到此结束，亲测成功。如果不能连接的，请检查自己的每一步操作。</p>
+<!--视频end-->
+<!--对不起，到时间了，请停止装逼-->
+
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    <div>
+      
+        <div>
+<div>
+
+
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+
+-------------THE<i class="fa fa-paw"></i>END-------------</div>
+
+
+
+</div>
+</div>
+      
+    </div>
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pic/wechatpay.jpeg" alt="森 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/pic/alipay.jpeg" alt="森 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+    
+    
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vps/" rel="tag"><i class="fa fa-tag"></i> vps</a>
+          
+        </div>
+      
+    
+      
+      
+      
+    
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/30/spark报错集/" rel="next" title="spark报错集">
+                <i class="fa fa-chevron-left"></i> spark报错集
+              </a>
+            
+          </div>
+    
+          <span class="post-nav-divider"></span>
+    
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/01/三步走战略/" rel="prev" title="三步走战略">
+                三步走战略 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="森" />
+            
+              <p class="site-author-name" itemprop="name">森</p>
+              <p class="site-description motion-element" itemprop="description">采菊东篱下，悠然见南山</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/stanxia" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="xooglexls@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://plus.google.com/u/0/+SengleXia" target="_blank" title="Google">
+                    
+                      <i class="fa fa-fw fa-google"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/stillstan1" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.facebook.com/xlsstan" target="_blank" title="FB Page">
+                    
+                      <i class="fa fa-fw fa-facebook"></i></a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                书签
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ac.qq.com/Comic/comicInfo/id/505432" title="火影" target="_blank">火影</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ishuhui.com/cartoon/book/1" title="海贼王" target="_blank">海贼王</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ac.qq.com/Comic/comicInfo/id/541812" title="西行记" target="_blank">西行记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.infoq.com/cn/spark1" title="InfoQ" target="_blank">InfoQ</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://portal.qiniu.com/bucket/stanxia/resource" title="七牛云" target="_blank">七牛云</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/caesar0301/awesome-public-datasets#finance" title="公共数据集" target="_blank">公共数据集</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#名词解释"><span class="nav-number">1.</span> <span class="nav-text">名词解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vps"><span class="nav-number">1.1.</span> <span class="nav-text">vps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vultr"><span class="nav-number">1.2.</span> <span class="nav-text">vultr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux"><span class="nav-number">1.3.</span> <span class="nav-text">linux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-number">1.4.</span> <span class="nav-text">ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shadowsocks"><span class="nav-number">1.5.</span> <span class="nav-text">shadowsocks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建vps"><span class="nav-number">2.</span> <span class="nav-text">搭建vps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册"><span class="nav-number">2.1.</span> <span class="nav-text">注册</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#购买"><span class="nav-number">2.2.</span> <span class="nav-text">购买</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程登录"><span class="nav-number">3.</span> <span class="nav-text">远程登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署shadowsocks"><span class="nav-number">4.</span> <span class="nav-text">部署shadowsocks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置锐意加速"><span class="nav-number">5.</span> <span class="nav-text">配置锐意加速</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+    
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-paw"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">森</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+    
+    
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://astan.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://stanxia.github.io/2017/10/31/手把手搭建vps和shadowsocks/';
+          this.page.identifier = '2017/10/31/手把手搭建vps和shadowsocks/';
+          this.page.title = '手把手搭建vps和shadowsocks';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://astan.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("f8AHUn2FOKCWoFzJTLrnSt4A-gzGzoHsz", "dOlRTKgDWf3Ut87VDHex4Wks");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+
+<!-- 页面点击小红心 -->
+
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body></html>

@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hive,acid," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介Hive作为Hadoop家族历史最悠久的组件之一，一直以其优秀的兼容性支持和稳定性而著称，越来越多的企业将业务数据从传统数据库迁移至Hadoop平台，并通过Hive来进行数据分析。但是我们在迁移的过程中难免会碰到如何将传统数据库的功能也迁移到Hadoop的问题，比如说事务。事务作为传统数据库很重要的一个功能，在Hive中是如何实现的呢？Hive的实现有什么不一样的地方呢？我们将传统数据库的应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive事务管理">
+<meta property="og:url" content="https://stanxia.github.io/2017/12/01/Hive事务管理/index.html">
+<meta property="og:site_name" content="东篱下">
+<meta property="og:description" content="简介Hive作为Hadoop家族历史最悠久的组件之一，一直以其优秀的兼容性支持和稳定性而著称，越来越多的企业将业务数据从传统数据库迁移至Hadoop平台，并通过Hive来进行数据分析。但是我们在迁移的过程中难免会碰到如何将传统数据库的功能也迁移到Hadoop的问题，比如说事务。事务作为传统数据库很重要的一个功能，在Hive中是如何实现的呢？Hive的实现有什么不一样的地方呢？我们将传统数据库的应用">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121055789375.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121056449113.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121056652164.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121057731335.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121058445186.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121058724922.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121059151954.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121059320973.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121059787723.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121059930373.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121060752594.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121060893595.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121061484874.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121061713652.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121063102376.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121063263012.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121064139828.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121064271722.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121065743030.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121065916525.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121066198138.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121066537536.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121066850801.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121067134496.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121067318880.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121067593291.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121067832545.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121068192695.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121068364921.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121068639301.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121068852336.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121069199763.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121069373565.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121069645501.jpg">
+<meta property="og:image" content="http://oliji9s3j.bkt.clouddn.com/15121077401844.jpg">
+<meta property="og:updated_time" content="2017-12-06T07:19:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive事务管理">
+<meta name="twitter:description" content="简介Hive作为Hadoop家族历史最悠久的组件之一，一直以其优秀的兼容性支持和稳定性而著称，越来越多的企业将业务数据从传统数据库迁移至Hadoop平台，并通过Hive来进行数据分析。但是我们在迁移的过程中难免会碰到如何将传统数据库的功能也迁移到Hadoop的问题，比如说事务。事务作为传统数据库很重要的一个功能，在Hive中是如何实现的呢？Hive的实现有什么不一样的地方呢？我们将传统数据库的应用">
+<meta name="twitter:image" content="http://oliji9s3j.bkt.clouddn.com/15121055789375.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://stanxia.github.io/2017/12/01/Hive事务管理/"/>
+
+
+
+
+
+  <title>Hive事务管理 | 东篱下</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">东篱下</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">斯坦@森</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/aboutme/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-spark">
+          <a href="/tags/spark/" rel="section">
+            
+            SPARK
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-hive">
+          <a href="/tags/hive/" rel="section">
+            
+            HIVE
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-gem">
+          <a href="/gem/" rel="section">
+            
+            GEM
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            
+            BOOKS
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies" rel="section">
+            
+            MOVIES
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-photos">
+          <a href="https://www.instagram.com/xooglexls/" rel="section">
+            
+            PHOTOS
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+    
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://stanxia.github.io/2017/12/01/Hive事务管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="森">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+    
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="东篱下">
+    </span>
+    
+    
+      <header class="post-header">
+    
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hive事务管理</h1>
+        
+    
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T11:30:06+08:00">
+                2017-12-01
+              </time>
+            
+    
+            
+    
+            
+          </span>
+    
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hive/" itemprop="url" rel="index">
+                    <span itemprop="name">hive</span>
+                  </a>
+                </span>
+    
+                
+                
+              
+            </span>
+          
+    
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/01/Hive事务管理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/01/Hive事务管理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+    
+          
+          
+             <span id="/2017/12/01/Hive事务管理/" class="leancloud_visitors" data-flag-title="Hive事务管理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+    
+          
+    
+          
+    
+          
+    
+        </div>
+      </header>
+    
+    
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+    
+      
+      
+    
+      
+        <script src="/assets/js/DPlayer.min.js"> </script><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Hive作为Hadoop家族历史最悠久的组件之一，一直以其优秀的兼容性支持和稳定性而著称，越来越多的企业将业务数据从传统数据库迁移至Hadoop平台，并通过Hive来进行数据分析。但是我们在迁移的过程中难免会碰到如何将传统数据库的功能也迁移到Hadoop的问题，比如说事务。事务作为传统数据库很重要的一个功能，在Hive中是如何实现的呢？Hive的实现有什么不一样的地方呢？我们将传统数据库的应用迁移到Hive如果有事务相关的场景我们该如何去转换并要注意什么问题呢？</p>
+<p>本文会通过很多真实测试案例来比较Hive与传统数据库事务的区别，并在文末给出一些在Hive平台上使用事务相关的功能时的指导和建议。</p>
+<h2 id="ACID与实现原理"><a href="#ACID与实现原理" class="headerlink" title="ACID与实现原理"></a>ACID与实现原理</h2><p>为了方便解释和说明后面的一些问题，这里重提传统数据库事务相关的概念，以下内容来源于网络。</p>
+<a id="more"></a>
+<h3 id="ACID说明"><a href="#ACID说明" class="headerlink" title="ACID说明"></a>ACID说明</h3><p>何为事务？就是一组单元化操作，这些操作要么都执行，要么都不执行，是一个不可分割的工作单位。</p>
+<p>事务（transaction）所应该具有的四个要素：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability）。这四个基本要素通常称为ACID特性。</p>
+<ol>
+<li>原子性（Atomicity）:一个事务是一个不可再分割的工作单位，事务中的所有操作要么都发生，要么都不发生。</li>
+<li>一致性（Consistency）:事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。这是说数据库事务不能破坏关系数据的完整性以及业务逻辑上的一致性。</li>
+<li>隔离性（Isolation）:多个事务并发访问，事务之间是隔离的，一个事务不影响其它事务运行效果。这指的是在并发环境中，当不同的事务同时操作相同的数据时，每个事务都有各自完整的数据空间。事务查看数据更新时，数据所处的状态要么是另一事务修改它之前的状态，要么是另一事务修改后的状态，事务不会查看到中间状态的数据。事务之间的相应影响，分别为：脏读、不可重复读、幻读、丢失更新。</li>
+<li>持久性（Durability）:意味着在事务完成以后，该事务锁对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。</li>
+</ol>
+<h3 id="ACID的实现原理"><a href="#ACID的实现原理" class="headerlink" title="ACID的实现原理"></a>ACID的实现原理</h3><p>事务可以保证ACID原则的操作，那么事务是如何保证这些原则的？解决ACID问题的两大技术点是：</p>
+<ol>
+<li>预写日志（Write-ahead logging）保证原子性和持久性</li>
+<li>锁（locking）保证隔离性</li>
+</ol>
+<p>这里并没有提到一致性，是因为一致性是应用相关的话题，它的定义一个由业务系统来定义，什么样的状态才是一致？而实现一致性的代码通常在业务逻辑的代码中得以体现。</p>
+<p>注：锁是指在并发环境中通过读写锁来保证操作的互斥性。根据隔离程度不同，锁的运用也不同。</p>
+<h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><table>
+<thead>
+<tr>
+<th>操作系统</th>
+<th>CentOS 6.5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JDK</td>
+<td>jdk1.7.0_67</td>
+</tr>
+<tr>
+<td>CDH</td>
+<td>5.9</td>
+</tr>
+<tr>
+<td>Hadoop</td>
+<td>2.6.0</td>
+</tr>
+<tr>
+<td>Hive</td>
+<td>1.1.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Hive的ACID测试"><a href="#Hive的ACID测试" class="headerlink" title="Hive的ACID测试"></a>Hive的ACID测试</h2><h3 id="Hive中的锁（不开启事务）"><a href="#Hive中的锁（不开启事务）" class="headerlink" title="Hive中的锁（不开启事务）"></a>Hive中的锁（不开启事务）</h3><p>Hive中定义了两种锁的模式：共享锁（S）和排它锁（X），顾名思义，多个共享锁(S)可以同时获取，但是排它锁(X)会阻塞其它所有锁。在本次测试中，CDH5.9的Concurrency参数是默认开启的（hive.support.concurrency=true），以下分别对开启Concurrency和关闭进行相关测试。</p>
+<p>首先在测试之前，创建一个普通的hive表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_notransaction(user_id <span class="built_in">Int</span>,<span class="keyword">name</span> <span class="keyword">String</span>);</div></pre></td></tr></table></figure>
+<p>向test_transaction表中插入测试数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_notransaction <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">'peach1'</span>),(<span class="number">2</span>,<span class="string">'peach2'</span>),(<span class="number">3</span>, <span class="string">'peach3'</span>),(<span class="number">4</span>, <span class="string">'peach4'</span>);</div></pre></td></tr></table></figure>
+<p>查看插入的数据：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121055789375.jpg" alt=""></p>
+<h4 id="开启Concurrency"><a href="#开启Concurrency" class="headerlink" title="开启Concurrency"></a>开启Concurrency</h4><p>1、对catalog_sales表进行并发select操作</p>
+<p>执行的sql语句：select count(*) from catalog_sales;</p>
+<p>执行单条sql查询时，获取一个共享锁（S），sql语句正常执行</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121056449113.jpg" alt=""></p>
+<p>同时执行两条sql查询是，获取两个共享锁，并且sql语句均正常执行</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121056652164.jpg" alt=""></p>
+<p><strong>分析</strong>：由此对比可得出hive在执行sql查询时获取Share锁，在并发的情况下可获取多个共享锁。</p>
+<p>2、对test表进行并发Insert操作</p>
+<p>创建表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">test</span>(<span class="keyword">name</span> <span class="keyword">string</span>, <span class="keyword">id</span> <span class="built_in">int</span>);</div></pre></td></tr></table></figure>
+<p>执行sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span> <span class="keyword">values</span>(<span class="string">'test11aaa1'</span>,<span class="number">1252</span>); </div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span> <span class="keyword">values</span>(<span class="string">'test1'</span>,<span class="number">52</span>);</div></pre></td></tr></table></figure>
+<p>执行单条insert语句时，获取一个X锁，sql语句正常执行</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121057731335.jpg" alt=""></p>
+<p>同时执行两条insert语句时，只能获取一个test表X锁，第一条insert语句正常执行，第二条insert语句处于等待状态，在第一条insert语句释放test表的X锁，第二条sql语句正常执行.</p>
+<p><strong>分析</strong>：由此对比可得出hive在执行insert操作时，只能获取一个X锁且锁不能共享，只能在sql执行完成释放锁后，后续sql方可继续执行。</p>
+<p>3、对test表执行select的同时执行insert操作</p>
+<p>执行sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">select count(*) from test; </div><div class="line">insert into test values(&quot;test123&quot;,123);</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>1) 执行select语句，在select未运行完时，在新的窗口同时执行insert语句观察两条sql执行情况，select语句正常执行，insert语句处于等待状态。</p>
+<p>2) 此时查看test表锁状态</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121058445186.jpg" alt=""></p>
+<p>在步骤1的执行过程中，获取到test表的锁为共享锁（S）</p>
+<p>3) 在select语句执行完成后，观察insert语句开始正常执行，此时获取test表锁为排它锁（X）。注意：在select语句执行完成后，大概过40s左右insert语句才正常执行，这是由hive.lock.sleep.between.retries参数控制，默认60</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121058724922.jpg" alt=""></p>
+<p><strong>分析</strong>： 由上述操作可得出，hive中一个表只能有一个排它锁(X)且锁不能共享，在获取排它锁时，表上不能有其它锁包括共享锁(S)，只有在表上所有的锁都释放后，insert操作才能继续，否则处于等待状态。</p>
+<p>对注意部分进行参数调整，将hive.lock.sleep.between.retries设置为10s，再次进行测试发现，在select语句执行完成后，大概过6s左右insert语句开始执行,通过两次测试发现，等待时间均在10s以内，由此可以得出此参数影响sql操作获取锁的间隔（在未获取到锁的情况下），如果此时未到获取锁触发周期，执行其它sql则，该sql会优于等待的sql执行。</p>
+<p>4、对test表执行insert的同时执行select操作</p>
+<p>执行sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert into test values(&quot;test123&quot;,123); </div><div class="line">select count(*) from test;</div></pre></td></tr></table></figure>
+<p>操作步骤：</p>
+<p>1) 在命令窗口执行insert语句，在insert操作未执行完成时，在新的命令窗口执行select语句，观察两个窗口的sql执行情况，insert语句正常执行，select语句处于等待状态。</p>
+<p>2) 此时查看test表锁状态，只有insert操作获取的排它锁（X）</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121059151954.jpg" alt=""></p>
+<p>3) 在insert语句执行完成后，观察select语句开始正常执行，此时查看test表锁状态为共享锁（S），之前的insert操作获取的排它锁（X）已被释放</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121059320973.jpg" alt=""></p>
+<p><strong>分析</strong>：在test表锁状态为排它锁(X)时，所有的操作均被阻塞处于等待状态，只有在排它锁(X)释放其它操作可继续进行。</p>
+<p>5、测试update和delete修改test表数据</p>
+<p>sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">update test set name=&apos;aaaa&apos; where id=1252; </div><div class="line">delete test set name=&apos;bbbb&apos; where id=123;</div></pre></td></tr></table></figure>
+<p>1) 表中数据，更新前</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121059787723.jpg" alt=""></p>
+<p>2) 在beeline窗口执行update操作</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121059930373.jpg" alt=""></p>
+<p>执行update操作报错，异常提示“Attempt to do update or delete using transaction manager that does not support these operations”，在非事务模式下不支持update 和 delete。</p>
+<h4 id="关闭Concurrency"><a href="#关闭Concurrency" class="headerlink" title="关闭Concurrency"></a>关闭Concurrency</h4><p>1、执行insert操作的同时执行select操作</p>
+<p>sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert into test_notransaction values(1,&apos;peach1&apos;),(2,&apos;peach2&apos;),(3, &apos;peach3&apos;),(4, &apos;peach4&apos;); </div><div class="line">select count(*) from test_notransaction;</div></pre></td></tr></table></figure>
+<p>操作sql前，查看表数据</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121060752594.jpg" alt=""></p>
+<p>查看test_notransaction表获取情况，show locks;</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121060893595.jpg" alt=""></p>
+<p>hive在未开启concurrency 的情况下,show locks不能正常获取表的锁，同时对同一张表执行insert和select操作时并发执行，获取数据取决于sql执行速度，因此在select 的时候未获取到插入数据。</p>
+<p>2、执行select操作的同时执行insert操作</p>
+<p>sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">select count(*) from test_notransaction; </div><div class="line">insert into test_notransaction values(1,&apos;peach1&apos;),(2,&apos;peach2&apos;),(3, &apos;peach3&apos;),(4, &apos;peach4&apos;);</div></pre></td></tr></table></figure>
+<p>在执行select的同时执行insert操作，操作可以同时并行操作，未产生阻塞等待的过程。</p>
+<p>3、同时执行多条insert操作</p>
+<p>sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert into test_notransaction values(1,&apos;peach1&apos;),(2,&apos;peach2&apos;),(3, &apos;peach3&apos;),(4, &apos;peach4&apos;); </div><div class="line">insert into test_notransaction values(1,&apos;peach1&apos;),(2,&apos;peach2&apos;),(3, &apos;peach3&apos;),(4, &apos;peach4&apos;);</div></pre></td></tr></table></figure>
+<p>同时执行insert操作时，可同时执行未产生阻塞等待的过程。</p>
+<p>4、执行update操作，将表中user_id为2的用户名修改为peach22</p>
+<p>sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">update test_notransaction set name=&apos;peach22&apos; where user_id=2;</div></pre></td></tr></table></figure>
+<p>执行update操作，执行结果如下：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121061484874.jpg" alt=""></p>
+<p>在未配置hive的Transaction和ACID时，不支持update操作。</p>
+<p>5、执行delete操作，将表中user_id为1信息删除</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_notransaction <span class="keyword">where</span> user_id=<span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>执行delete操作，执行结果如下：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121061713652.jpg" alt=""></p>
+<p>hive未配置Transaction和ACID，不支持delete操作。</p>
+<p>6、查看表获取锁类型</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> locks;</div></pre></td></tr></table></figure>
+<p>无法正常执行；</p>
+<h3 id="Hive的事务"><a href="#Hive的事务" class="headerlink" title="Hive的事务"></a>Hive的事务</h3><h4 id="Hive的事务配置"><a href="#Hive的事务配置" class="headerlink" title="Hive的事务配置"></a>Hive的事务配置</h4><p>Hive从0.13开始加入了事务支持，在行级别提供完整的ACID特性，Hive在0.14时加入了对INSERT…VALUES,UPDATE,and DELETE的支持。对于在Hive中使用ACID和Transactions，主要有以下限制：</p>
+<ul>
+<li>不支持BEGIN,COMMIT和ROLLBACK</li>
+<li>只支持ORC文件格式</li>
+<li>表必须分桶</li>
+<li>不允许从一个非ACID连接写入/读取ACID表</li>
+</ul>
+<p>为了使Hive支持事务操作，需将以下参数加入到hive-site.xml文件中。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.support.concurrency<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.enforce.bucketing<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.exec.dynamic.partition.mode<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>nonstrict<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.txn.manager<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.hive.ql.lockmgr.DbTxnManager<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.compactor.initiator.on<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.compactor.worker.threads <span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>可以在Cloudera Manager进行以下配置：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121063102376.jpg" alt=""></p>
+<p>为了让beeline支持还需要配置：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121063263012.jpg" alt=""></p>
+<h4 id="Hive事务测试"><a href="#Hive事务测试" class="headerlink" title="Hive事务测试"></a>Hive事务测试</h4><h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><p>1、创建一个支持ACID的表</p>
+<p>建表语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> test_trancaction </div><div class="line">(user_id <span class="built_in">Int</span>,<span class="keyword">name</span> <span class="keyword">String</span>) </div><div class="line">clustered <span class="keyword">by</span> (user_id) <span class="keyword">into</span> <span class="number">3</span> buckets <span class="keyword">stored</span> <span class="keyword">as</span> orc TBLPROPERTIES (<span class="string">'transactional'</span>=<span class="string">'true'</span>);</div></pre></td></tr></table></figure>
+<p>将表名修改为test_transaction</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> test_trancaction <span class="keyword">rename</span> <span class="keyword">to</span> test_transaction;</div></pre></td></tr></table></figure>
+<p>2、准备测试数据，向数据库中插入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_transaction <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">'peach'</span>),(<span class="number">2</span>,<span class="string">'peach2'</span>),(<span class="number">3</span>,<span class="string">'peach3'</span>),(<span class="number">4</span>,<span class="string">'peach4'</span>),(<span class="number">5</span>,<span class="string">'peach5'</span>);</div></pre></td></tr></table></figure>
+<h5 id="用例测试"><a href="#用例测试" class="headerlink" title="用例测试"></a>用例测试</h5><p>1、执行update操作，将user_id的name修改为peach_update</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peach_update'</span> <span class="keyword">where</span> user_id=<span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>执行修改操作，查看表获取锁类型</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121064139828.jpg" alt=""></p>
+<p>数据修改成功，且不影响其它数据。</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121064271722.jpg" alt=""></p>
+<p>2、同时修改同一条数据，将user<em>id为1的用户名字修改为peach，另一条sql将名字修改为peach</em></p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peach'</span> <span class="keyword">where</span> user_id=<span class="number">1</span>;</div><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peach_'</span> <span class="keyword">where</span> user_id=<span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>sql执行顺序为peach，其次为peach_</p>
+<p>此时查看表获取到的锁</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121065743030.jpg" alt=""></p>
+<p>通过获取到锁分析，在同时修改同一条数据时，优先执行的sql获取到了SHARED_WRITE，而后执行的sql获取锁的状态为WAITING状态，表示还未获取到SHARED_WRITE锁，等待第一条sql执行结束后方可获取到锁对数据进行操作。</p>
+<p>通过上不执行操作分析，数据user<em>id为1的用户名字应被修改为peach</em></p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121065916525.jpg" alt=""></p>
+<p>3、同时修改不同数据，修改id为2的name为peachtest，修改id为3的name为peach_test</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peachtest'</span> <span class="keyword">where</span> user_id=<span class="number">2</span>; </div><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peach_test'</span> <span class="keyword">where</span> user_id=<span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>sql执行顺序为peachtest，其次为peach_test</p>
+<p>此时查看表获取到的锁</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121066198138.jpg" alt=""></p>
+<p>通过sql操作获取锁分析，在同时修改不同数据时，优先执行的sql获取到了SHARED_WRITE，而后执行的sql获取锁的状态为WAITING状态，表示还未获取到SHARED_WRITE锁，等待第一条sql执行结束后方可获取到锁对数据进行操作。</p>
+<p>4、执行select操作的同时执行insert操作</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> test_transaction; </div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> test_transaction <span class="keyword">values</span>(<span class="number">3</span>,<span class="string">'peach3'</span>);</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>先执行select操作，再执行insert操作，执行完成后查看表获取到的锁</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121066537536.jpg" alt=""></p>
+<p>由于select和insert操作均获取的是SHARED_READ锁，读锁为并行，所以select查询和insert同时执行，互不影响。</p>
+<p>5、update同一条数据的同时select该条数据</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'peach_update'</span> <span class="keyword">where</span> user_id=<span class="number">1</span>; <span class="keyword">select</span> * <span class="keyword">from</span></div><div class="line"> test_transaction <span class="keyword">where</span> user_id=<span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>先执行update操作，再执行select操作，获取此时表获取到的锁</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121066850801.jpg" alt=""></p>
+<p>通过获取锁的情况分析， 在update操作时，获取到SHARED_WRITE锁，执行select操作时获取到SHARED_READ锁，在进行修改数据时未阻塞select查询操作，update未执行完成时，select查询到的数据为未修改的数据。</p>
+<p>6、执行delete操作，将user_id为3的数据删除</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>执行delete操作，获取此时表获取到的锁</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121067134496.jpg" alt=""></p>
+<p>删除操作获取到的是SHARED_WRITE锁</p>
+<p>执行成功后数据</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121067318880.jpg" alt=""></p>
+<p>7、同时delete同一条数据</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">3</span>;</div><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>按顺序执行两条delete操作，查看此时表获取到的锁：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121067593291.jpg" alt=""></p>
+<p>通过查看delete操作获取到的锁，优先执行的操作获取到SHARED_WRITE锁，后执行的delete操作未获取到SHARED_WRITE锁，处于WAITING状态。</p>
+<p>执行删除后结果</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121067832545.jpg" alt=""></p>
+<p>8、同时delete两条不同的数据</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">1</span>; </div><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">5</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>按顺序执行两条delete操作，查看此时表获取到的锁：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121068192695.jpg" alt=""></p>
+<p>通过查看delete操作获取到的锁，优先执行的操作获取到SHARED_WRITE锁，后执行的delete操作未获取到SHARED_WRITE锁，处于WAITING状态。</p>
+<p>执行删除后结果</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121068364921.jpg" alt=""></p>
+<p>9、执行delete的同时对删除的数据进行update操作</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">3</span>; </div><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'test'</span> <span class="keyword">where</span> user_id=<span class="number">3</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>按顺序执行两条sql，查看此时获取到表的锁：</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121068639301.jpg" alt=""></p>
+<p>通过查看delete和update操作获取到的锁，优先执行的操作获取到SHARED_WRITE锁，后执行的操作未获取到SHARED_WRITE锁，处于WAITING状态。</p>
+<p>执行delete和update后结果</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121068852336.jpg" alt=""></p>
+<p><strong>注意</strong>：此处在delete优先于update执行，但执行结果为update的结果，执行异常。</p>
+<p>10、执行delete的同时对不同的数据进行update操作</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">2</span>; </div><div class="line"><span class="keyword">update</span> test_transaction <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'test'</span> <span class="keyword">where</span> user_id=<span class="number">4</span>;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>按顺序执行上面两条sql，查看表锁获取情况</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121069199763.jpg" alt=""></p>
+<p>通过查看delete和update操作获取到的锁，优先执行的操作获取到SHARED_WRITE锁，后执行的操作未获取到SHARED_WRITE锁，处于WAITING状态。</p>
+<p>执行delete和update后结果,执行结果正常</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121069373565.jpg" alt=""></p>
+<p>11、执行delete的同时执行select操作</p>
+<p>sql语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> test_transaction <span class="keyword">where</span> user_id=<span class="number">4</span>; </div><div class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> test_transaction;</div></pre></td></tr></table></figure>
+<p>步骤：</p>
+<p>按顺序执行上面两条sql，查看表锁获取情况</p>
+<p><img src="http://oliji9s3j.bkt.clouddn.com/15121069645501.jpg" alt=""></p>
+<p>在操作delete的同时执行select操作，两个操作均同时获取到SHARED_RED和SHARED_WRITE锁，操作并行进行未出现阻塞。</p>
+<h2 id="总结对比"><a href="#总结对比" class="headerlink" title="总结对比"></a>总结对比</h2><p><img src="http://oliji9s3j.bkt.clouddn.com/15121077401844.jpg" alt=""></p>
+<h2 id="Hive事务使用建议"><a href="#Hive事务使用建议" class="headerlink" title="Hive事务使用建议"></a>Hive事务使用建议</h2><ol>
+<li>传统数据库中有三种模型隐式事务、显示事务和自动事务。在目前Hive对事务仅支持自动事务，因此Hive无法通过显示事务的方式对一个操作序列进行事务控制。</li>
+<li>传统数据库事务在遇到异常情况可自动进行回滚，目前Hive无法支持ROLLBACK。</li>
+<li>传统数据库中支持事务并发，而Hive对事务无法做到完全并发控制,多个操作均需要获取WRITE的时候则这些操作为串行模式执行（在测试用例中”delete同一条数据的同时update该数据”，操作是串行的且操作完成后数据未被删除且数据被修改）未保证数据一致性。</li>
+<li>Hive的事务功能尚属于实验室功能，并不建议用户直接上生产系统，因为目前它还有诸多的限制，如只支持ORC文件格式，建表必须分桶等，使用起来没有那么方便，另外该功能的稳定性还有待进一步验证。</li>
+<li>CDH默认开启了Hive的Concurrency功能，主要是对并发读写的的时候通过锁进行了控制。所以为了防止用户在使用Hive的时候，报错提示该表已经被lock，对于用户来说不友好，建议在业务侧控制一下写入和读取，比如写入同一个table或者partition的时候保证是单任务写入，其他写入需控制写完第一个任务了，后面才继续写，并且控制在写的时候不让用户进行查询。另外需要控制在查询的时候不要允许有写入操作。</li>
+<li>如果对于数据一致性不在乎，可以完全关闭Hive的Concurrency功能关闭，即设置hive.support.concurrency为false，这样Hive的并发读写将没有任何限制。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    <div>
+      
+        <div>
+<div>
+
+
+
+<div style="text-align:center;color: #ccc;font-size:14px;">
+
+-------------THE<i class="fa fa-paw"></i>END-------------</div>
+
+
+
+</div>
+</div>
+      
+    </div>
+    
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/pic/wechatpay.jpeg" alt="森 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/pic/alipay.jpeg" alt="森 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+    
+    
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hive/" rel="tag"><i class="fa fa-tag"></i> hive</a>
+          
+            <a href="/tags/acid/" rel="tag"><i class="fa fa-tag"></i> acid</a>
+          
+        </div>
+      
+    
+      
+      
+      
+    
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/30/SparkSQL-Catalyst优化理解/" rel="next" title="SparkSQL-Catalyst优化理解">
+                <i class="fa fa-chevron-left"></i> SparkSQL-Catalyst优化理解
+              </a>
+            
+          </div>
+    
+          <span class="post-nav-divider"></span>
+    
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/10/27/火之意志/" rel="prev" title="火之意志">
+                火之意志 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="森" />
+            
+              <p class="site-author-name" itemprop="name">森</p>
+              <p class="site-description motion-element" itemprop="description">采菊东篱下，悠然见南山</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/stanxia" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="xooglexls@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://plus.google.com/u/0/+SengleXia" target="_blank" title="Google">
+                    
+                      <i class="fa fa-fw fa-google"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/stillstan1" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.facebook.com/xlsstan" target="_blank" title="FB Page">
+                    
+                      <i class="fa fa-fw fa-facebook"></i></a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                书签
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ac.qq.com/Comic/comicInfo/id/505432" title="火影" target="_blank">火影</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ishuhui.com/cartoon/book/1" title="海贼王" target="_blank">海贼王</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ac.qq.com/Comic/comicInfo/id/541812" title="西行记" target="_blank">西行记</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.infoq.com/cn/spark1" title="InfoQ" target="_blank">InfoQ</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://portal.qiniu.com/bucket/stanxia/resource" title="七牛云" target="_blank">七牛云</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/caesar0301/awesome-public-datasets#finance" title="公共数据集" target="_blank">公共数据集</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACID与实现原理"><span class="nav-number">2.</span> <span class="nav-text">ACID与实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACID说明"><span class="nav-number">2.1.</span> <span class="nav-text">ACID说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ACID的实现原理"><span class="nav-number">2.2.</span> <span class="nav-text">ACID的实现原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试环境"><span class="nav-number">3.</span> <span class="nav-text">测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hive的ACID测试"><span class="nav-number">4.</span> <span class="nav-text">Hive的ACID测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hive中的锁（不开启事务）"><span class="nav-number">4.1.</span> <span class="nav-text">Hive中的锁（不开启事务）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开启Concurrency"><span class="nav-number">4.1.1.</span> <span class="nav-text">开启Concurrency</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关闭Concurrency"><span class="nav-number">4.1.2.</span> <span class="nav-text">关闭Concurrency</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hive的事务"><span class="nav-number">4.2.</span> <span class="nav-text">Hive的事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hive的事务配置"><span class="nav-number">4.2.1.</span> <span class="nav-text">Hive的事务配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hive事务测试"><span class="nav-number">4.2.2.</span> <span class="nav-text">Hive事务测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#环境准备"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用例测试"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">用例测试</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结对比"><span class="nav-number">5.</span> <span class="nav-text">总结对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hive事务使用建议"><span class="nav-number">6.</span> <span class="nav-text">Hive事务使用建议</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+    
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-paw"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">森</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+    
+    
+    
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://astan.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://stanxia.github.io/2017/12/01/Hive事务管理/';
+          this.page.identifier = '2017/12/01/Hive事务管理/';
+          this.page.title = 'Hive事务管理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://astan.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("f8AHUn2FOKCWoFzJTLrnSt4A-gzGzoHsz", "dOlRTKgDWf3Ut87VDHex4Wks");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+
+<!-- 页面点击小红心 -->
+
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+</body></html>
