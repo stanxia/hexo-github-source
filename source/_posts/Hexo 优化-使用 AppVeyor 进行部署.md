@@ -13,6 +13,9 @@ categories: hexo
 ## 核心步骤
 ### 新建代码仓库
 首先我们先确定，将项目托管在 GitHub 上，这里有两种方案，一种是在存放博客静态代码的仓库（如：xxx.github.io）中新添加分支;另一种则是新建一个仓库用于存放项目。我这里使用的第二种方式，新建了一个仓库：hexo-github-source 。
+
+<!-- more -->
+
 ### 配置 AppVeyor
 [点我进入AppVeyor官网](https://www.appveyor.com/)
 ![](http://oliji9s3j.bkt.clouddn.com/15126603949109.png)
