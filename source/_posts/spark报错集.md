@@ -13,7 +13,7 @@ categories: spark
 <!--more-->
 ## 问题汇总
 
-### 关键词：spark-hive classes are not found
+### 问题1：spark-hive classes are not found
 
 #### 概述：
 ```
@@ -37,7 +37,7 @@ Exception in thread "main" java.lang.IllegalArgumentException: Unable to instant
 重新编译项目／模块即可。
 ```
 
-### 关键词：Spark Local 模式写 Hive，user=xialinsheng
+### 问题2：Spark Local 模式写 Hive，user=xialinsheng
 #### 概述：
 ```
 Caused by: org.apache.hadoop.security.AccessControlException: Permission denied: user=xialinsheng, access=WRITE, inode="/user/hive/warehouse/xls002":hadoop:supergroup:drwxr-xr-x
@@ -67,7 +67,7 @@ if (!isSecurityEnabled() && (user == null)) {
 ```java
 System.setProperty("HADOOP_USER_NAME","Hadoop有权限的用户名");
 ```
-### 关键词：javax.servlet.FilterRegistration
+### 问题3：javax.servlet.FilterRegistration
 #### 概述：
 在idea上运行spark程序时，出现以下信息：
 
