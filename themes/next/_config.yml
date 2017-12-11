@@ -19,10 +19,10 @@ override: false
 # 例如，你把你的图标放在里面 `hexo-site/source/images` directory.
 # 然后需要重命名和重新定义它们的其他名称, 否则，NEXT的图标将重写你的自定义图标在Hexo。
 favicon:
-  #small: /images/favicon-16x16-next.png
-  #medium: /images/favicon-32x32-next.png
-  #apple_touch_icon: /images/apple-touch-icon-next.png
-  #safari_pinned_tab: /images/logo.svg
+  small: /images/favicon-16x16-next.png
+  medium: /images/favicon-32x32-next.png
+  apple_touch_icon: /images/apple-touch-icon-next.png
+  safari_pinned_tab: /images/logo.svg
   #android_manifest: /images/manifest.json
   #ms_browserconfig: /images/browserconfig.xml
 
