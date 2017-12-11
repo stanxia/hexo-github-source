@@ -1,9 +1,7 @@
 ---
 title: Hive报错集
 date: 2017-12-11 13:58:58
-tags:
-- hive
-- 报错集
+tags: hive
 categories: hive
 ---
 ## 前言
