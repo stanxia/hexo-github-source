@@ -4,9 +4,9 @@ date: 2017-12-13 10:38:05
 tags: GitHub
 categories: GitHub
 ---
-## 前言
+## {%note info%}前言{%endnote%}
 学习 GitHub 的使用规则，记录遇到的问题。
-## watch , star , fork 的含义
+## {%note info%}watch , star , fork 的含义{%endnote%}
 刚使用 GitHub 的时候，看到每一个项目页面右上角都有如下图所示的字样：
 ![](http://oliji9s3j.bkt.clouddn.com/15131331012221.jpg)
 <!-- more -->
