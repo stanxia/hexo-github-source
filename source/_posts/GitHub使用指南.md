@@ -9,9 +9,9 @@ categories: GitHub
 ## watch , star , fork 的含义
 刚使用 GitHub 的时候，看到每一个项目页面右上角都有如下图所示的字样：
 ![](http://oliji9s3j.bkt.clouddn.com/15131331012221.jpg)
+<!-- more -->
 点击 watch 按钮 会出现如下所示：
 ![](http://oliji9s3j.bkt.clouddn.com/15131331429596.jpg)
-<!-- more -->
 ### watch
 * watch 的功能是观察跟踪这个项目，如果项目有任何更新，如果选择了 watching 该项目，都会在邮箱中接收到相关的更新信息。
 * not watching 表示不关注这个项目的更新情况，但你被提及的时候也会发邮件通知。
