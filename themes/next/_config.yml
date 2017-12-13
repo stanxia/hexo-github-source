@@ -126,10 +126,7 @@ scheme: Mist
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
 social:
   GitHub: https://github.com/stanxia || github
-  E-Mail: xooglexls@gmail.com || envelope
-  Google: https://plus.google.com/u/0/+SengleXia || google
   Twitter: https://twitter.com/stillstan1 || twitter
-  FB Page: https://www.facebook.com/xlsstan || facebook
   #VK Group: https://vk.com/yourname || vk
   #StackOverflow: https://stackoverflow.com/yourname || stack-overflow
   #YouTube: https://youtube.com/yourname || youtube
