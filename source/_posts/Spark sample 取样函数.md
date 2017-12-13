@@ -5,9 +5,9 @@ tags: spark
 categories: spark
 ---
 <!--请开始装逼-->
-
+{%note info%}
 ## 背景
-
+{%endnote%}
 Spark取样操作，无法获取随机样本的解决方案。Dataset中sample函数源码如下：
 
 ```scala
@@ -59,13 +59,13 @@ def sample(withReplacement: Boolean, fraction: Double): Dataset[T] = {
 ```
 
 <!-- more -->
-
+{%note info%}
 ## 问题
-
+{%endnote%}
 结果数据的行数一般在（fraction*总数）左右。没有一个固定的值，如果需要得到固定行数的随机数据的话不建议采用该方法。
-
+{%note info%}
 ## 办法
-
+{%endnote%}
 获取随机取样的替代方法：
 
 ```scala

@@ -7,7 +7,9 @@ tags:
 - catalyst
 categories: spark
 ---
+{%note info%}
 ## 前言
+{%endnote%}
 本文主要介绍SparkSQL的优化器系统Catalyst，其设计思路基本都来自于传统型数据库，而且和大多数当前的大数据SQL处理引擎设计基本相同（Impala、Presto、Hive（Calcite）等）。
 
 SQL优化器核心执行策略主要分为两个大的方向：
@@ -21,8 +23,9 @@ SQL优化器核心执行策略主要分为两个大的方向：
 <!-- more -->
 
 ![](http://oliji9s3j.bkt.clouddn.com/15120193767483.jpg)
-
+{%note info%}
 ## Tree&Rule
+{%endnote%}
 在介绍SQL优化器工作原理之前，有必要首先介绍两个重要的数据结构：Tree和Rule。SQL语法树就是SQL语句通过编译器之后会被解析成一棵树状结构。这棵树会包含很多节点对象，每个节点都拥有特定的数据类型，同时会有0个或多个孩子节点（节点对象在代码中定义为TreeNode对象），下图是个简单的示例：
 ![](http://oliji9s3j.bkt.clouddn.com/15120194433988.jpg)
 如上图所示，箭头左边表达式有3种数据类型（Literal表示常量、Attribute表示变量、Add表示动作），表示x+(1+2)。映射到右边树状结构后，每一种数据类型就会变成一个节点。另外，Tree还有一个非常重要的特性，可以通过一定的规则进行等价变换，如下图：
@@ -31,8 +34,9 @@ SQL优化器核心执行策略主要分为两个大的方向：
 上图定义了一个等价变换规则(Rule)：两个Integer类型的常量相加可以等价转换为一个Integer常量，这个规则其实很简单，对于上文中提到的表达式x+(1+2)来说就可以转变为x+3。对于程序来讲，如何找到两个Integer常量呢？其实就是简单的二叉树遍历算法，每遍历到一个节点，就模式匹配当前节点为Add、左右子节点是Integer常量的结构，定位到之后将此三个节点替换为一个Literal类型的节点。
 
 上面用一个最简单的示例来说明等价变换规则以及如何将规则应用于语法树。在任何一个SQL优化器中，通常会定义大量的Rule（后面会讲到），SQL优化器会遍历语法树中每个节点，针对遍历到的节点模式匹配所有给定规则（Rule），如果有匹配成功的，就进行相应转换，如果所有规则都匹配失败，就继续遍历下一个节点。
-
+{%note info%}
 ## Catalyst工作流程
+{%endnote%}
 任何一个优化器工作原理都大同小异：SQL语句首先通过Parser模块被解析为语法树，此棵树称为Unresolved Logical Plan；Unresolved Logical Plan通过Analyzer模块借助于数据元数据解析为Logical Plan；此时再通过各种基于规则的优化策略进行深入优化，得到Optimized Logical Plan；优化后的逻辑执行计划依然是逻辑的，并不能被Spark系统理解，此时需要将此逻辑执行计划转换为Physical Plan；为了更好的对整个过程进行理解，下文通过一个简单示例进行解释。
 
 ### Parser
@@ -75,8 +79,9 @@ SparkSQL中Analyzer定义了各种解析规则，可以查看Analyzer类，其�
 ![](http://oliji9s3j.bkt.clouddn.com/15120198739726.jpg)
 
 此时就需要将逻辑执行计划转换为物理执行计划，将逻辑上可行的执行计划变为Spark可以真正执行的计划。比如Join算子，Spark根据不同场景为该算子制定了不同的算法策略，有BroadcastHashJoin、ShuffleHashJoin以及SortMergeJoin等（可以将Join理解为一个接口，BroadcastHashJoin是其中一个具体实现），物理执行计划实际上就是在这些具体实现中挑选一个耗时最小的算法实现，这个过程涉及到基于代价优化策略。
-
+{%note info%}
 ## 查看SparkSQL执行计划
+{%endnote%}
 至此，通过一个简单的示例完整的介绍了Catalyst的整个工作流程，包括Parser阶段、Analyzer阶段、Optimize阶段以及Physical Planning阶段。有同学可能会比较感兴趣Spark环境下如何查看一条具体的SQL的整个过程，在此介绍两种方法：
 
 ### 查看逻辑执行计划
