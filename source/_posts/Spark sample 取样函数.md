@@ -7,6 +7,7 @@ categories: spark
 <!--请开始装逼-->
 
 ## {% note info %}背景{% endnote %}
+
 Spark取样操作，无法获取随机样本的解决方案。Dataset中sample函数源码如下：
 
 ```scala
