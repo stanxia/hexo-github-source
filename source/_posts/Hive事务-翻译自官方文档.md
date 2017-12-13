@@ -151,7 +151,7 @@ hive.compactor.worker.threads – a positive number on at least one instance of 
 
 如果需希望系统自动进行合并，则可以设置： ` "NO_AUTO_COMPACTION" ` ,也可以通过` Alter Table/Partition Compact ` 语法来设置。
 
-```[sql] [Example: Set compaction options in TBLPROPERTIES at table level]
+```sql Example: Set compaction options in TBLPROPERTIES at table level
 CREATE TABLE table_name (
   id                int,
   name              string
@@ -165,7 +165,7 @@ TBLPROPERTIES ("transactional"="true",
 );
 ```
 
-```[sql] [Example: Set compaction options in TBLPROPERTIES at request level]
+```sql Example: Set compaction options in TBLPROPERTIES at request level
 ALTER TABLE table_name COMPACT 'minor' 
    WITH OVERWRITE TBLPROPERTIES ("compactor.mapreduce.map.memory.mb"="3072");  -- specify compaction map job properties
 ALTER TABLE table_name COMPACT 'major'
