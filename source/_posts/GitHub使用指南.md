@@ -4,20 +4,20 @@ date: 2017-12-13 10:38:05
 tags: GitHub
 categories: GitHub
 ---
-## {% note info %}前言{% endnote %}
+## 前言
 学习 GitHub 的使用规则，记录遇到的问题。
-## {% note info %} watch , star , fork 的含义{% endnote %}
+## watch , star , fork 的含义
 刚使用 GitHub 的时候，看到每一个项目页面右上角都有如下图所示的字样：
 ![](http://oliji9s3j.bkt.clouddn.com/15131331012221.jpg)
 点击 watch 按钮 会出现如下所示：
 ![](http://oliji9s3j.bkt.clouddn.com/15131331429596.jpg)
+<!-- more -->
 ### watch
-watch 的功能是观察跟踪这个项目，如果项目有任何更新，如果选择了 watching 该项目，都会在邮箱中接收到相关的更新信息。
-not watching 表示不关注这个项目的更新情况，但你被提及的时候也会发邮件通知。
-ignoring 表示不接收任何通知。
+* watch 的功能是观察跟踪这个项目，如果项目有任何更新，如果选择了 watching 该项目，都会在邮箱中接收到相关的更新信息。
+* not watching 表示不关注这个项目的更新情况，但你被提及的时候也会发邮件通知。
+* ignoring 表示不接收任何通知。
 
 如果你想持续跟进该项目的任何更新情况，则可以选择 watching 。
-<!-- more -->
 ### star
 star 类似于社交软件中的关注。如果选择了 star ， 则可以在自己的 star 页面查看到曾经 star 过的项目。
 点击右上角自己的头像，选择 your stars ：
