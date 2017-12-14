@@ -90,9 +90,9 @@ menu:
   HIVE: /tags/hive/
   GEM: /gem/ || heart
   BOOKS: /books || book
-  标签: /tags/ || tags
-  归档: /archives/ || archive
-  关于: /aboutme/ || user
+  home: / || home
+  about: /aboutme/ || user
+  tags: /tags/ || tags
   #MOVIES: /movies || video-camera
   #PHOTOS: https://www.instagram.com/xooglexls/ || instagram
   #schedule: /schedule/ || calendar
