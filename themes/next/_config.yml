@@ -84,18 +84,17 @@ index_with_subtitle: false
 # Value before `||` delimeter is the target link.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
 menu:
-  home: / || home
-  about: /aboutme/ || user
-  tags: /tags/ || tags
-  #categories: /categories/ || th
-  archives: /archives/ || archive
-  ML: /tags/ml/
+	技术论文: /tags/paper/
+  机器学习: /tags/ml/
   SPARK: /tags/spark/
   HIVE: /tags/hive/
   GEM: /gem/ || heart
   BOOKS: /books || book
-  MOVIES: /movies || video-camera
-  PHOTOS: https://www.instagram.com/xooglexls/ || instagram
+  标签: /tags/ || tags
+  归档: /archives/ || archive
+  关于: /aboutme/ || user
+  #MOVIES: /movies || video-camera
+  #PHOTOS: https://www.instagram.com/xooglexls/ || instagram
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
@@ -162,7 +161,7 @@ toc:
   number: true
 
   # 如果是true，那么所有的单词都将放在下一行，如果标题宽度长于边栏宽度。
-  wrap: true
+  wrap: false
 
 # Creative Commons 4.0 International License.
 # http://creativecommons.org/
