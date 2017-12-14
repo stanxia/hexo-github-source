@@ -83,6 +83,7 @@ index_with_subtitle: false
 # Key is the name of menu item. If translate for this menu will find in languages - this translate will be loaded; if not - Key name will be used. Key is case-senstive.
 # Value before `||` delimeter is the target link.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
+# 注意：不能写中文名
 menu:
 	PAPER: /tags/paper/
   ML: /tags/ml/
@@ -179,9 +180,9 @@ sidebar:
   #  - always  所有的页面都自动展开
   #  - hide    点击的时候才展开
   #  - remove  完全删除侧边栏，包括侧边栏切换。
-  display: post
+  #display: post
   #display: always
-  #display: hide
+  display: hide
   #display: remove
 
   # 侧边栏离顶部菜单栏的偏移量 (only for Pisces | Gemini).
