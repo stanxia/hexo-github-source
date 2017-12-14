@@ -1,9 +1,7 @@
 ---
 title: Google File System 中文版
 date: 2017-12-14 12:38:00
-tags:
-- paper
-- GFS
+tags: paper
 categories: paper
 ---
 {% note info %}
