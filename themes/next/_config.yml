@@ -91,8 +91,8 @@ menu:
   HIVE: /tags/hive/
   GEM: /gem/ || heart
   BOOKS: /books || book
-  home: / || home
   about: /aboutme/ || user
+  archives: /archives/ || archive
   tags: /tags/ || tags
   #MOVIES: /movies || video-camera
   #PHOTOS: https://www.instagram.com/xooglexls/ || instagram
