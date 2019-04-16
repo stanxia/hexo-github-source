@@ -1,0 +1,19 @@
+---
+title: A terrible blaze devastates Notre Dame cathedral 
+date: 2019-04-16 23:16:53 
+tags: economist 
+categories: economist 
+---
+
+
+##### Stunned Parisians watch centuries of history dissolve in flames
+![image](https://cdn.static-economist.com/sites/default/files/20190420_blp903.jpg)
+> Apr 15th 2019
+THEY GATHERED on the bridges over the Seine to watch in disbelief. Some Parisians were in tears; most watched in eerie silence. The devastating fire that broke out in the wood-timbered roof of the gothic cathedral of Notre Dame in the early evening of April 15th rapidly spread before their eyes, consuming the central spire and defeating the efforts of fire-fighters to bring the flames under control. President Emmanuel Macron, spoke for many across France when he tweeted that he was witnessing “part of us burn.”  
+By midnight in Paris the worst seemed to be over. The main stone structure appeared to have been saved, and the prompt action of hundreds of fire-fighters had rescued many works of art and relics from the burning building. But as well as the medieval oak-beamed roof and the later-built spire, the damage to the interior has been immense.
+The 850-year-old edifice had survived war, revolution and Nazi occupation, an emblem of resistance in the face of a constantly disrupted history. It was the site of Napoleon’s coronation in 1804 and the inspiration for literary works, most famously Victor Hugo’s “The Hunchback of Notre-Dame”, and one of the city’s most iconic landmarks, visited by 13m tourists each year. Notre Dame was at once a living place of worship for the French Catholic church and the property of the French secular state: a symbol in itself of the country’s history and its present, in all its glorious contradictions.
+The heartbreak felt by many as they watched nine centuries of history dissolve in flames was profound. Bertrand Delanoë, the former mayor of Paris, called the cathedral a “jewel of the heritage of humanity”. Mr Macron, who had been preparing to give a televised address to the nation at the end of his “great national debate”, cancelled the speech and went straight to the site of the disaster.
+It will take time and a full investigation before the exact cause of the fire is established. Early reports from the Paris fire service suggested that it was not a work of arson but an accident that broke out in the central roof, where building works were underway to renovate the 19th-century spire. But already questions are being asked about disaster-planning for a monument of this scale and national importance, situated amid narrow streets on an inaccessible island in the centre of the city.
+The search for somebody to blame will absorb France for weeks and months to come. The public prosecutor has opened an inquiry. When shock and disbelief turns to anger, many will want to know exactly what precautions were taken by those working on the renovation, and why it was so difficult for fire-fighters to stop the blaze spreading. Five hundred were deployed, but it took them ages to get there. Some will look to Anne Hidalgo, the mayor of Paris, who tweeted that she had “no words for the pain” she felt.
+Others still will look to Mr Macron. The unpopular president already had his hands full dealing with the gilets jaunes (yellow jackets) protests, which have dragged on since last November. This evening was supposed to mark the moment that he reconnected with the French people, and put his reputation for haughty rule behind him. Now he has a different challenge. Paris, and all of France, is hurting. The tragic devastation of Notre Dame will touch the country for a long time—and put the head of state’s capacity to touch the French with the right words of consolation to a severe test. He made a good start last night, visiting the scene and pledging that "we will rebuild" the cathedral. It is a task that will take many, many years.
+

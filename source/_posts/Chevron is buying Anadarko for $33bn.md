@@ -1,0 +1,20 @@
+---
+title: Chevron is buying Anadarko for $33bn 
+date: 2019-04-16 23:16:56 
+tags: economist 
+categories: economist 
+---
+
+
+##### The deal signals greater consolidation in the shale business
+![image](https://cdn.static-economist.com/sites/default/files/20190420_blp901.jpg)
+> Apr 13th 2019
+IN RECENT MONTHS a question has been hanging over the plains of Texas: what would be the next big shale deal? The logic for consolidation seemed clear. Texas’s Permian basin is America’s most productive oilfield, despite a patchwork of plots with hundreds of owners. Shale companies looked cheap, with investors sceptical about firms’ ability to produce both oil and profits. On April 12th the curious got their answer.
+Chevron, a giant oil company, will pay $33bn in cash and shares to buy Anadarko, an independent producer with rich holdings in the Permian. It will also assume Anadarko’s $16bn debt. The deal transforms Chevron into the world’s second-biggest publicly traded oil-producer, behind only ExxonMobil. It is the latest sign of shale’s growing importance to the world’s biggest energy firms.
+Oil majors have arrived relatively late to fracking. Small, independent companies were first to set about coaxing oil from shale. They developed ways to drill not just down but horizontally, then assault shale with water and sand until the rock gave up its hydrocarbon riches. But the industry titans have warmed to the idea. Unlike, say, a complex deepwater project in a distant jurisdiction, shale offers quick drilling times, predictable cashflow and favourable American regulation. Smaller companies have often fracked frenetically, eager to reinvest proceeds and chase growth. Too frenetically at times; some took on more debt than they could handle. Giant companies have less experience with the technique. But their diversified revenue and larger balance-sheets allow them to accumulate acreage even as they drill at a more measured pace. 
+Last year BP, a British firm, paid $10.5bn to acquire the shale assets of BHP, a giant miner. ExxonMobil and Chevron have placed the biggest bets. Chevron’s shale holdings were vast even before the Anadarko deal. The company controlled 1.7m acres (690,000 hectares) in two of the Permian’s most productive regions. In March ExxonMobil said it expects production in the Permian to exceed 1m barrels a day within five years. 
+With Anadarko, Chevron’s Permian production may be 60% higher than ExxonMobil’s, according to Rystad Energy, a research firm. Anadarko gives Chevron more than just shale. Its assets include a liquefied-natural-gas project in Mozambique and holdings in the Gulf of Mexico. Still, Anadarko’s Permian plots would have been the main lure. With them, Chevron can drill more wells, more efficiently. Adjacent plots will let the company move farther sideways through the rock and simplify the transport of equipment and other inputs, such as the millions of gallons of water required to wrest oil from each well. Chevron reckons that the deal will bring $2bn in savings, all told. 
+Some investors hope that, as shale companies consolidate, they will mature and their performance will improve. Independent producers may now bulk up, following the lead of Concho Resources. Last year it bought RSP Permian, a rival, for $9.5bn. 
+Meanwhile, the supermajors’ holdings look poised to expand. ExxonMobil has said it would consider additional shale acquisitions. Royal Dutch Shell is rumoured to be weighing the purchase of Endeavor Energy, whose headquarters sit in the heart of the Permian. 
+Not all investors are sold on the attractions of shale. Follow This, a group of them concerned about climate change, expressed disappointment that Chevron would spend $33bn on Anadarko, rather than on renewable energy. At its annual meeting next month, Chevron’s shareholders will vote on a resolution that would compel the company to disclose how it can reduce its carbon footprint in line with the Paris climate agreement. Chevron insists that it is “positioned to win in any environment”. An environmentally friendlier one may be an exception. 
+
