@@ -1,9 +1,9 @@
 ---
-title: “Fosse/Verdon” is a compelling examination of a creative partnership 
-date: 2019-04-16 23:16:39 
-tags: economist 
-categories: economist 
----
+title: “Fosse/Verdon” is a compelling examination of a creative partnership 
+date: 2019-04-16 23:54:24 
+tags: economist 
+categories: economist 
+---
 
 
 ##### Bob Fosse and Gwen Verdon were integral to some of the 20th century’s biggest musicals
