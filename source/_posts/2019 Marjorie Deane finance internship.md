@@ -1,6 +1,6 @@
 ---
-title: 三步走战略
-date: 2017-11-01 10:45:09
+title: 2019 Marjorie Deane finance internship
+date: 2019-04-04 10:45:09
 tags: economist
 categories: economist
 ---
