@@ -1,9 +1,9 @@
 ---
-title: Have Arthur Miller’s plays lost their edge? 
-date: 2019-04-16 23:16:48 
-tags: economist 
-categories: economist 
----
+title: Have Arthur Miller’s plays lost their edge
+date: 2019-04-16 23:16:48 
+tags: economist 
+categories: economist 
+---
 
 
 ##### The problem often lies in the staging, not the works themselves

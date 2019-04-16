@@ -1,9 +1,9 @@
 ---
-title: Tiger Woods made our golf model look silly. Have we learned a lesson? 
-date: 2019-04-16 23:16:43 
-tags: economist 
-categories: economist 
----
+title: Tiger Woods made our golf model look silly Have we learned a lesson
+date: 2019-04-16 23:16:43 
+tags: economist 
+categories: economist 
+---
 
 
 ##### The sport’s most beloved star was very good at Augusta—but also very lucky
