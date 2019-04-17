@@ -86,7 +86,7 @@ index_with_subtitle: false
 # 注意：不能写中文名
 menu:
 	PAPER: /tags/paper/
-  ML: /tags/ml/
+  ECONOMIST: /tags/economist/
   SPARK: /tags/spark/
   HIVE: /tags/hive/
   GEM: /gem/ || heart
@@ -214,7 +214,7 @@ excerpt_description: true
 # 自动摘录。不推荐。
 # 最好使用 <!-- more --> 
 auto_excerpt:
-  enable: false
+  enable: true
   length: 300
 
 # 元数据信息显示设置
@@ -240,7 +240,7 @@ post_wordcount:
   #description: ex. subscribe to my blog by scanning my public wechat account
 
 # 打赏设置
-reward_comment: 交个朋友～～
+reward_comment: 一壶清酒
 wechatpay: /images/pic/wechatpay.jpeg
 #bitcoin: /images/bitcoin.png
 
