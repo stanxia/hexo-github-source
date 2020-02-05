@@ -4,9 +4,9 @@
 
 # Site
 title: 东篱下
-subtitle: 斯坦@森
+subtitle: 闲庭舞键
 description: 技术改变世界，阅读塑造人生
-author: 森
+author: 舒服一夏
 language: zh-Hans
 timezone:
 
@@ -121,11 +121,11 @@ deploy:
   type: git
   repo: https://github.com/stanxia/stanxia.github.io.git
 ## 豆瓣读书 电影插件
-douban:
-  user: 169673246
-  book:
-    title: '军火库'
-    quote: '千万不要忘了武装自己'
-  movie:
-    title: '幻境'
-    quote: '原来人生还可以这样'
+# douban:
+#   user: 169673246
+#   book:
+#     title: '军火库'
+#     quote: '千万不要忘了武装自己'
+#   movie:
+#     title: '幻境'
+#     quote: '原来人生还可以这样'

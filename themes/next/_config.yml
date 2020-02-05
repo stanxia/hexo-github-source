@@ -89,9 +89,11 @@ menu:
   ECONOMIST: /tags/economist/
   SPARK: /tags/spark/
   HIVE: /tags/hive/
+  FLINK: /tags/flink/
+  ALGO: /tags/algo/
   GEM: /gem/ || heart
-  BOOKS: /books || book
-  about: /aboutme/ || user
+  # BOOKS: /books || book
+  # about: /aboutme/ || user
   archives: /archives/ || archive
   tags: /tags/ || tags
   #MOVIES: /movies || video-camera
@@ -127,7 +129,7 @@ scheme: Mist
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, globe icon will be loaded.
 social:
   GitHub: https://github.com/stanxia || github
-  Twitter: https://twitter.com/stillstan1 || twitter
+  # Twitter: https://twitter.com/stillstan1 || twitter
   #VK Group: https://vk.com/yourname || vk
   #StackOverflow: https://stackoverflow.com/yourname || stack-overflow
   #YouTube: https://youtube.com/yourname || youtube
@@ -146,8 +148,8 @@ links_layout: block
 #links_layout: inline
 links:
   #Title: http://example.com/
-  InfoQ: http://www.infoq.com/cn/spark1
-  公共数据集: https://github.com/caesar0301/awesome-public-datasets#finance
+  # InfoQ: http://www.infoq.com/cn/spark1
+  # 公共数据集: https://github.com/caesar0301/awesome-public-datasets#finance
 
 # 侧边栏头像
 # in theme directory(source/images): /images/avatar.gif
@@ -206,7 +208,7 @@ sidebar:
 scroll_to_more: true
 
 # 在缓存中自动保存阅览位置
-save_scroll: false
+save_scroll: true
 
 # 自动摘录在首页的描述作为序言文本。
 excerpt_description: true
@@ -228,8 +230,8 @@ post_meta:
 # 依赖于: https://github.com/willin/hexo-wordcount
 post_wordcount:
   item_text: true
-  wordcount: false
-  min2read: false
+  wordcount: true
+  min2read: true
   totalcount: false
   separated_meta: true
 
@@ -358,7 +360,7 @@ han: false
 
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: astan
   count: true
 
@@ -461,7 +463,7 @@ facebook_comments_plugin:
 #           Technorati,Posterous,Tumblr,GoogleBookmarks,Newsvine,
 #           Evernote,Friendfeed,Vkontakte,Odnoklassniki,Mailru
 needmoreshare2:
-  enable: true
+  enable: false
   postbottom: 
     enable: false
     options:
@@ -505,7 +507,7 @@ needmoreshare2:
 # user_id must NOT be null when admin_enable is true!
 # you can visit http://dev.duoshuo.com get duoshuo user id.
 duoshuo_info:
-  ua_enable: true
+  ua_enable: false
   admin_enable: false
   user_id: 0
   #admin_nickname: Author
@@ -536,7 +538,7 @@ rating:
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
 leancloud_visitors:
-  enable: true
+  enable: false
   app_id: f8AHUn2FOKCWoFzJTLrnSt4A-gzGzoHsz
   app_key: dOlRTKgDWf3Ut87VDHex4Wks
 
@@ -544,7 +546,7 @@ leancloud_visitors:
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
 busuanzi_count:
   # count values only if the other configs are false
-  enable: true
+  enable: false
   # custom uv span for the whole site
   site_uv: true
   site_uv_header: <i class="fa fa-user"></i>
