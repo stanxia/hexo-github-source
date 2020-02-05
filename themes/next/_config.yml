@@ -230,8 +230,8 @@ post_meta:
 # 依赖于: https://github.com/willin/hexo-wordcount
 post_wordcount:
   item_text: true
-  wordcount: true
-  min2read: true
+  wordcount: false
+  min2read: false
   totalcount: false
   separated_meta: true
 
@@ -242,8 +242,8 @@ post_wordcount:
   #description: ex. subscribe to my blog by scanning my public wechat account
 
 # 打赏设置
-reward_comment: 一壶清酒
-wechatpay: /images/pic/wechatpay.jpeg
+# reward_comment: 一壶清酒
+# wechatpay: /images/pic/wechatpay.jpeg
 #bitcoin: /images/bitcoin.png
 
 # 网站许可证设置
