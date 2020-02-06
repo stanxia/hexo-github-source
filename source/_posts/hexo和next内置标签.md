@@ -75,20 +75,24 @@ python code
 {% tabs code,1 %}
 <!-- tab java -->
 
-```java
+{% code %}
+
 public class Hello{
   //
 }
-```
+
+{% endcode %}
 
 <!-- endtab -->
 <!-- tab scala -->
 
-```scala
+{% code %}
+
 object Hello{
   //
 }
-```
+
+{% endcode %}
 
 <!-- endtab -->
 <!-- tab python -->
@@ -97,6 +101,8 @@ object Hello{
 def hello:
   #
 ```
+
+
 
 <!-- endtab -->
 {% endtabs %}
