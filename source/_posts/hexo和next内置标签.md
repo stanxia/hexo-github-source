@@ -233,7 +233,9 @@ _.compactUnderscore.js_.compact([0, 1, false, 2, '', 3]);
 
 This is identical to using a code block, but instead uses three backticks to delimit the block.
 
-\``` [language] [title] [url] [link text] code snippet ```
+```
+ [language] [title] [url] [link text] code snippet
+```
 
 ## Pull Quote
 
