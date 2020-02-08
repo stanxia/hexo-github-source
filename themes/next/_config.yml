@@ -87,6 +87,7 @@ index_with_subtitle: false
 menu:
 	PAPER: /tags/paper/
   ECONOMIST: /tags/economist/
+  OFFER: /tags/offer/
   SPARK: /tags/spark/
   HIVE: /tags/hive/
   FLINK: /tags/flink/
